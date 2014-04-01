@@ -2,16 +2,24 @@ package com.carljackson.twitterapp.models;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.carljackson.twitterapp.HumanTime;
 
 public class Tweet {
 	private String body;
 	private long uid;
 	private boolean favorited;
 	private boolean retweeted;
+	private String createdAt;
 	private User user;
+	final DateTimeFormatter df = DateTimeFormat
+			.forPattern("EEE MMM dd HH:mm:ss Z yyyy");
 
 	public User getUser() {
 		return user;
@@ -33,6 +41,12 @@ public class Tweet {
 		return retweeted;
 	}
 
+	public String relativeTime() {
+		DateTime dt = df.withOffsetParsed().parseDateTime(createdAt);
+		DateTime now = new DateTime();
+		return HumanTime.approximately(now.getMillis() - dt.getMillis());
+	}
+
 	public static Tweet fromJson(JSONObject jsonObject) {
 		Tweet tweet = new Tweet();
 		try {
@@ -40,6 +54,7 @@ public class Tweet {
 			tweet.uid = jsonObject.getLong("id");
 			tweet.favorited = jsonObject.getBoolean("favorited");
 			tweet.retweeted = jsonObject.getBoolean("retweeted");
+			tweet.createdAt = jsonObject.getString("created_at");
 			tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
 		} catch (JSONException e) {
 			e.printStackTrace();
