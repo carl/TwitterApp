@@ -47,6 +47,10 @@
             android:name="com.carljackson.twitterapp.TimelineActivity"
             android:label="@string/title_activity_timeline" >
         </activity>
+        <activity
+            android:name="com.carljackson.twitterapp.ComposeTweetActivity"
+            android:label="@string/title_activity_compose_tweet" >
+        </activity>
     </application>
 
 </manifest>

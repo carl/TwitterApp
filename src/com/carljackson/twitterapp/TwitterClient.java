@@ -7,6 +7,7 @@ import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 /*
  * 
@@ -37,6 +38,13 @@ public class TwitterClient extends OAuthBaseClient {
 			url += "&max_id=" + String.format("%d", maxId - 1);
 		}
 		client.get(url, null, handler);
+	}
+
+	public void postStatus(String body, AsyncHttpResponseHandler handler) {
+		String url = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", body);
+		client.post(url, params, handler);
 	}
 
 	/*

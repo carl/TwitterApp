@@ -1,5 +1,6 @@
 package com.carljackson.twitterapp.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.joda.time.DateTime;
@@ -11,15 +12,16 @@ import org.json.JSONObject;
 
 import com.carljackson.twitterapp.HumanTime;
 
-public class Tweet {
+public class Tweet implements Serializable {
+	private static final long serialVersionUID = 4044095803727421459L;
+	public static final String KEY_NAME = "Tweet";
+
 	private String body;
 	private long uid;
 	private boolean favorited;
 	private boolean retweeted;
 	private String createdAt;
 	private User user;
-	final DateTimeFormatter df = DateTimeFormat
-			.forPattern("EEE MMM dd HH:mm:ss Z yyyy");
 
 	public User getUser() {
 		return user;
@@ -42,6 +44,8 @@ public class Tweet {
 	}
 
 	public String relativeTime() {
+		DateTimeFormatter df = DateTimeFormat
+				.forPattern("EEE MMM dd HH:mm:ss Z yyyy");
 		DateTime dt = df.withOffsetParsed().parseDateTime(createdAt);
 		DateTime now = new DateTime();
 		return HumanTime.approximately(now.getMillis() - dt.getMillis());
