@@ -1,6 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.carljackson.twitterapp.ComposeTweetActivity" >
-
-</menu>
-<!-- From: file:/Users/carl/developer/android/TwitterApp/app/src/main/res/menu/compose_tweet.xml -->
