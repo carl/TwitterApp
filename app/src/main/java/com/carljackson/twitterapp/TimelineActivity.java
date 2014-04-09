@@ -80,6 +80,7 @@ public class TimelineActivity extends FragmentActivity implements ActionBar.TabL
 
     public void openProfile() {
         Intent i = new Intent(this, ProfileActivity.class);
+        i.putExtra("screen_name", "");
         startActivity(i);
     }
 
