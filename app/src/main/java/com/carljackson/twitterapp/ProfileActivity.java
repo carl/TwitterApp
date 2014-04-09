@@ -1,6 +1,5 @@
 package com.carljackson.twitterapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -9,12 +8,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carljackson.twitterapp.fragments.UserTimelineFragment;
 import com.carljackson.twitterapp.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
-
 
 public class ProfileActivity extends FragmentActivity {
 
@@ -22,13 +21,14 @@ public class ProfileActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        loadProfile();
+        String screenName = getIntent().getExtras().getString("screen_name");
+        loadProfile(screenName);
+        android.support.v4.app.FragmentTransaction fts = getSupportFragmentManager().beginTransaction();
+        fts.replace(R.id.flUserTimelineContainer, new UserTimelineFragment(screenName)).commit();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.profile, menu);
         return true;
@@ -46,22 +46,40 @@ public class ProfileActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void loadProfile() {
-        TwitterClientApp.getRestClient().getMyInfo(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(JSONObject json) {
-                User user = User.fromJson(json);
-                getActionBar().setTitle("@" + user.getScreenName());
-                populateProfileHeader(user);
-                super.onSuccess(json);
-            }
+    protected void loadProfile(String screenName) {
+        if (screenName.length() == 0) {
+            TwitterClientApp.getRestClient().getMyInfo(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONObject json) {
+                    User user = User.fromJson(json);
+                    getActionBar().setTitle("@" + user.getScreenName());
+                    populateProfileHeader(user);
+                    super.onSuccess(json);
+                }
 
-            @Override
-            public void onFailure(Throwable throwable, String s) {
-                Log.d("DEBUG", throwable.toString());
-                super.onFailure(throwable, s);
-            }
-        });
+                @Override
+                public void onFailure(Throwable throwable, String s) {
+                    Log.d("DEBUG", throwable.toString());
+                    super.onFailure(throwable, s);
+                }
+            });
+        } else {
+            TwitterClientApp.getRestClient().getUserInfo(screenName, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONObject json) {
+                    User user = User.fromJson(json);
+                    getActionBar().setTitle("@" + user.getScreenName());
+                    populateProfileHeader(user);
+                    super.onSuccess(json);
+                }
+
+                @Override
+                public void onFailure(Throwable throwable, String s) {
+                    Log.d("DEBUG", throwable.toString());
+                    super.onFailure(throwable, s);
+                }
+            });
+        }
     }
 
     private void populateProfileHeader(User user) {
