@@ -33,24 +33,29 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void getHomeTimeline(long maxId, AsyncHttpResponseHandler handler) {
-		String url = getApiUrl("statuses/home_timeline.json?count=25");
-		if (maxId > 0) {
-			url += "&max_id=" + String.format("%d", maxId - 1);
+		String url = getApiUrl("statuses/home_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", "25");
+        if (maxId > 0) {
+            params.put("max_id", String.format("%d", maxId - 1));
 		}
-		client.get(url, null, handler);
+		client.get(url, params, handler);
 	}
 
 	public void getMentionsTimeline(long maxId, AsyncHttpResponseHandler handler) {
-		String url = getApiUrl("statuses/mentions_timeline.json?count=25");
-		if (maxId > 0) {
-			url += "&max_id=" + String.format("%d", maxId - 1);
+		String url = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", "25");
+        if (maxId > 0) {
+            params.put("max_id", String.format("%d", maxId - 1));
 		}
-		client.get(url, null, handler);
+		client.get(url, params, handler);
 	}
 
     public void getUserTimeline(long maxId, String screenName, AsyncHttpResponseHandler handler) {
         String url = getApiUrl("statuses/user_timeline.json");
         RequestParams params = new RequestParams();
+        params.put("count", "25");
         if (maxId > 0) {
             params.put("max_id", String.format("%d", maxId - 1));
         }
@@ -66,8 +71,10 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void getUserInfo(String screenName, AsyncHttpResponseHandler handler) {
-		String url = getApiUrl("users/show.json") + "?screen_name=" + screenName;
-		client.get(url, null, handler);
+		String url = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screenName);
+		client.get(url, params, handler);
 	}
 
 	public void postStatus(String body, AsyncHttpResponseHandler handler) {

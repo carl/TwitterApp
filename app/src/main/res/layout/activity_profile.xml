@@ -77,7 +77,4 @@
 
     </FrameLayout>
 
-    android:layout_marginRight="255dp" />
-
-
 </RelativeLayout>
