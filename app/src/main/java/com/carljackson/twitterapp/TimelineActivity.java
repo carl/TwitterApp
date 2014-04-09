@@ -71,9 +71,16 @@ public class TimelineActivity extends FragmentActivity implements ActionBar.TabL
             case R.id.action_compose:
                 openCompose();
                 return true;
+            case R.id.action_profile:
+                openProfile();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void openProfile() {
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
     }
 
     private void openCompose() {
