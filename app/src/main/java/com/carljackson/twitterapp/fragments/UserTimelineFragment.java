@@ -24,16 +24,30 @@ public class UserTimelineFragment extends TweetsListFragment {
     }
 
     protected void loadMoreTweets(long maxId) {
-        TwitterClientApp.getRestClient().getUserTimeline(maxId, screenName, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(JSONArray jsonTweets) {
-                getAdapter().addAll(Tweet.fromJson(jsonTweets));
-            }
+        if (screenName.length() == 0) {
+            TwitterClientApp.getRestClient().getMyTimeline(maxId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONArray jsonTweets) {
+                    getAdapter().addAll(Tweet.fromJson(jsonTweets));
+                }
 
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.d("DEBUG", throwable.toString());
-            }
-        });
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Log.d("DEBUG", throwable.toString());
+                }
+            });
+        } else {
+            TwitterClientApp.getRestClient().getUserTimeline(maxId, screenName, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONArray jsonTweets) {
+                    getAdapter().addAll(Tweet.fromJson(jsonTweets));
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Log.d("DEBUG", throwable.toString());
+                }
+            });
+        }
     }
 }
